@@ -17,13 +17,6 @@ class IncompatibleLayout extends StandardException
      */
     public function __construct($layout_version, array $required_rules)
     {
-        $rules = array_map(
-            function ($rule) {
-                return implode(' ', $rule);
-            },
-            $required_rules
-        );
-
         $message = 'The layout file that created/modified with ' . $layout_version .
                    ' is incompatible with this version.' .
                    ' It is compatible with ' . implode(' and ', $rules) . '.';

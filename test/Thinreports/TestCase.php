@@ -5,7 +5,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
-    static protected $item_formats = [];
+    static protected $item_formats = array();
 
     function rootDir()
     {
@@ -27,7 +27,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     {
         $this->dataLoadItemFormat($item_name);
 
-        $formats = [];
+        $formats = array();
         foreach (static::$item_formats[$item_name] as $key => $format) {
             $formats[$format['id']] = $format;
         }
@@ -36,10 +36,12 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     function dataItemFormats(array $item_name_and_keys)
     {
-        $formats = [];
+        $formats = array();
 
         foreach ($item_name_and_keys as $item_name_and_key) {
-            $format = $this->dataItemFormat(...$item_name_and_key);
+            list($item_name, $format_key) = $item_name_and_key;
+
+            $format = $this->dataItemFormat($item_name, $format_key);
             $formats[$format['id']] = $format;
         }
         return $formats;

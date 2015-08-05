@@ -17,7 +17,7 @@ class Page extends BlankPage
 {
     private $report;
     private $layout;
-    private $items = [];
+    private $items = array();
 
     /**
      * @param Report $report

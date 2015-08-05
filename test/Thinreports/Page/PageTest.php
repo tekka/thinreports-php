@@ -13,14 +13,14 @@ class PageTest extends TestCase
 
     function setup()
     {
-        $item_formats = $this->dataItemFormats([
-            ['text_block', 'default'],
-            ['image_block', 'default'],
-            ['text', 'default']
-        ]);
+        $item_formats = $this->dataItemFormats(array(
+            array('text_block', 'default'),
+            array('image_block', 'default'),
+            array('text', 'default')
+        ));
 
         $this->report = new Report($this->dataLayoutFile('empty.tlf'));
-        $this->layout = new Layout(['svg' => '<svg></svg>'], $item_formats);
+        $this->layout = new Layout(array('svg' => '<svg></svg>'), $item_formats);
     }
 
     private function newPage($is_countable = true)
@@ -107,16 +107,16 @@ class PageTest extends TestCase
         $page = $this->newPage();
 
         try {
-            $page->setItemValues(['text_default' => 'value']);
+            $page->setItemValues(array('text_default' => 'value'));
             $this->fail();
         } catch (Exception\StandardException $e) {
             $this->assertEquals('Unedtiable Item', $e->getSubject());
         }
 
-        $page->setItemValues([
+        $page->setItemValues(array(
             'text_block_default'  => 'value',
             'image_block_default' => 'value'
-        ]);
+        ));
 
         $this->assertEquals('value', $page('text_block_default')->getValue());
         $this->assertEquals('value', $page('image_block_default')->getValue());
