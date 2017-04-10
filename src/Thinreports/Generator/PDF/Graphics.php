@@ -162,16 +162,25 @@ class Graphics
      */
     public function drawBase64Image($base64_string, $x, $y, $width, $height, array $attrs = array())
     {
-        $registry_key = md5($base64_string);
-        $image_path = $this->getRegisteredImagePath($registry_key);
+        $position = $this->buildImagePosition($attrs);
 
-        if ($image_path === null) {
-            $image_path = tempnam(sys_get_temp_dir(), 'thinreports');
-            $this->image_registry[$registry_key] = $image_path;
-            file_put_contents($image_path, base64_decode($base64_string));
-        }
-
-        $this->drawImage($image_path, $x, $y, $width, $height, $attrs);
+        $this->pdf->Image(
+            "@".base64_decode($base64_string),  // image file
+            $x,         // x
+            $y,         // y
+            $width,     // box width
+            $height,    // box height
+            null,       // type
+            null,       // link
+            null,       // align
+            true,       // resize
+            300,        // dpi
+            null,       // palign
+            false,      // ismask
+            false,      // imgmask
+            0,          // border
+            $position   // fitbox
+        );
     }
 
     public function clearRegisteredImages()
