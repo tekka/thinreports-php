@@ -19,6 +19,7 @@ use Thinreports\Exception;
 class LayoutRenderer extends AbstractRenderer
 {
     private $items = array();
+    private $item_map = array();
 
     /**
      * @param PDF\Document $doc
@@ -28,6 +29,10 @@ class LayoutRenderer extends AbstractRenderer
     {
         parent::__construct($doc);
         $this->items = $this->parse($layout);
+
+        foreach ($this->items as $attributes) {
+            $this->item_map[$attributes["id"]] = $attributes;
+        }
     }
 
     /**
@@ -66,6 +71,36 @@ class LayoutRenderer extends AbstractRenderer
             $items[] = $attributes;
         }
         return $items;
+    }
+
+    public function get_item_by_id($id){
+        return $this->item_map[$id];
+    }
+
+    public function render_item($attributes){
+
+        $type_name = $attributes['class'];
+
+        switch ($type_name) {
+            case 's-text':
+                $this->renderSVGText($attributes);
+                break;
+            case 's-image':
+                $this->renderSVGImage($attributes);
+                break;
+            case 's-rect':
+                $this->renderSVGRect($attributes);
+                break;
+            case 's-ellipse':
+                $this->renderSVGEllipse($attributes);
+                break;
+            case 's-line':
+                $this->renderSVGLine($attributes);
+                break;
+            default:
+                throw new Exception\StandardException('Unknown Element', $type_name);
+                break;
+        }
     }
 
     public function render()

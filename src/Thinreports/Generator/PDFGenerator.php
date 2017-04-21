@@ -79,8 +79,10 @@ class PDFGenerator
 
         $this->doc->addPage($layout);
 
-        $this->renderLayout($layout);
-        $this->renderItems($page->getFinalizedItems());
+//        $this->renderLayout($layout);
+//        $this->renderItems($page->getFinalizedItems());
+
+        $this->renderAll($layout,$page->getFinalizedItems());
     }
 
     /**
@@ -106,6 +108,28 @@ class PDFGenerator
     {
         foreach ($items as $item) {
             $this->item_renderer->render($item);
+        }
+    }
+
+    public function renderAll(Layout $layout,array $items){
+
+        $layout_identifier = $layout->getIdentifier();
+
+        if (array_key_exists($layout_identifier, $this->layout_renderers)) {
+            $s_renderer = $this->layout_renderers[$layout_identifier];
+        } else {
+            $s_renderer = new Renderer\LayoutRenderer($this->doc, $layout);
+            $this->layout_renderers[$layout_identifier] = $s_renderer;
+        }
+
+        foreach ($items as $item) {
+            $s_item = $s_renderer->get_item_by_id($item["id"]);
+            if( $s_item ){
+                $s_renderer->render_item($s_item);
+            }
+            else{
+                $this->item_renderer->render($item);
+            }
         }
     }
 }
