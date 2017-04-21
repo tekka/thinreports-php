@@ -139,14 +139,27 @@ class ItemRenderer extends AbstractRenderer
         $bounds = $item->getBounds();
         $styles = $this->buildImageBoxItemStyles($item);
 
-        $this->doc->graphics->drawImage(
-            $item->getSource(),
-            $bounds['x'],
-            $bounds['y'],
-            $bounds['width'],
-            $bounds['height'],
-            $styles
-        );
+        if( strpos($item->getId(), "dyn_") === 0 ){
+            $this->doc->graphics->drawBase64Image(
+                $item->getSource(),
+                $bounds['x'],
+                $bounds['y'],
+                $bounds['width'],
+                $bounds['height'],
+                $styles
+            );
+        }
+        else{
+            $this->doc->graphics->drawImage(
+                $item->getSource(),
+                $bounds['x'],
+                $bounds['y'],
+                $bounds['width'],
+                $bounds['height'],
+                $styles
+            );
+        }
+
     }
 
     /**
@@ -250,7 +263,7 @@ class ItemRenderer extends AbstractRenderer
             $bounds['y1'],
             $bounds['x2'],
             $bounds['y2'],
-            $this->normalizeGraphicStyles($item->exportStyles())
+            $this->buildGraphicStyles($item->exportStyles())
         );
     }
 
